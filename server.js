@@ -169,6 +169,6 @@ io.on("connection", (socket) => {
 //   console.log("Server listening on Port " + port);
 // });
 
-httpServer.listen(port, () => {
+httpServer.listen(process.env.PORT, () => {
   console.log("Express server listening on http://localhost:" + port);
 });
