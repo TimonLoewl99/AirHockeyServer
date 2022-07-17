@@ -2,16 +2,25 @@ const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const port = 3000;
+const cors = require("cors");
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  /* options */
+  cors: {
+    origin: "http://localhost:8080",
+    methods: ["GET", "POST"],
+  },
 });
-
+app.use(cors());
 var serverIndex;
 var sender;
 var cidPlayer1;
 var cidPlayer2;
+
+var userData = {
+  player1: null,
+  player2: null,
+};
 
 var score = {
   player1: 0,
@@ -25,7 +34,7 @@ var connection = {
 
 const socket_by_cid = [];
 
-app.use(express.static("src"));
+//app.use(express.static("src"));
 
 httpServer.on("error", function (err) {
   console.error(err.stack);
@@ -56,7 +65,8 @@ io.on("connection", (socket) => {
     socket.emit("connection status", connection);
   });
 
-  socket.on("player1 connected", () => {
+  socket.on("player1 connected", (user) => {
+    userData.player1 = user;
     score.player1 = 0;
     score.player2 = 0;
     connection.player1 = true;
@@ -69,7 +79,8 @@ io.on("connection", (socket) => {
     console.log(connection);
   });
 
-  socket.on("player2 connected", () => {
+  socket.on("player2 connected", (user) => {
+    userData.player2 = user;
     score.player1 = 0;
     score.player2 = 0;
     connection.player2 = true;
@@ -146,7 +157,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("get game information", () => {
-    socket.emit("game over", score);
+    socket.emit("game over", score, userData);
   });
 });
 
@@ -154,6 +165,10 @@ io.on("connection", (socket) => {
 //   console.log("Server listening on Port " + port);
 // });
 
+// httpServer.listen(port, "192.168.178.81", () => {
+//   console.log("Server listening on Port " + port);
+// });
+
 httpServer.listen(port, () => {
-  console.log("Server listening on Port " + port);
+  console.log("Express server listening on http://localhost:" + port);
 });
