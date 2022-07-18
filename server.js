@@ -62,7 +62,7 @@ io.on("connection", (socket) => {
 
   // initial websocket message containing ids
   socket.on("update connection", () => {
-    socket.emit("connection status", connection);
+    socket.emit("connection status", connection, userData);
   });
 
   socket.on("player1 connected", (user) => {
