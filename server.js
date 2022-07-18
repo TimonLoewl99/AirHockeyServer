@@ -12,7 +12,7 @@ const io = new Server(httpServer, {
   },
 });
 app.use(cors());
-var serverIndex;
+
 var sender;
 var cidPlayer1;
 var cidPlayer2;
@@ -101,10 +101,16 @@ io.on("connection", (socket) => {
     logger(cid, "websocket disconnect");
     if (cidPlayer1 === cid) {
       connection.player1 = false;
+      score.player1 = 0;
+      cidPlayer1 = null;
+      userData.player1 = null;
       console.log(connection.player1);
     }
     if (cidPlayer2 === cid) {
       connection.player2 = false;
+      score.player2 = 0;
+      cidPlayer2 = null;
+      userData.player2 = null;
       console.log(connection.player2);
     }
     delete socket_by_cid[cid];
@@ -148,16 +154,20 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("other pusher position", posX, posY, velX, velY);
   });
 
-  socket.on("set score", (score1, score2) => {
-    socket.broadcast.emit("score", score1, score2);
-  });
+  // socket.on("set score", (score1, score2) => {
+  //   socket.broadcast.emit("score", score1, score2);
+  // });
 
-  socket.on("update enemy position", (posX, posY, velX, velY) => {
-    socket.broadcast.emit("update my position", posX, posY, velX, velY);
-  });
+  // socket.on("update enemy position", (posX, posY, velX, velY) => {
+  //   socket.broadcast.emit("update my position", posX, posY, velX, velY);
+  // });
 
   socket.on("get game information", () => {
     socket.emit("game over", score, userData);
+  });
+
+  socket.on("reset server", () => {
+    resetAll();
   });
 });
 
@@ -172,3 +182,14 @@ io.on("connection", (socket) => {
 httpServer.listen(process.env.PORT, () => {
   console.log("Express server listening on http://localhost:" + port);
 });
+
+function resetAll() {
+  connection.player1 = false;
+  connection.player2 = false;
+  score.player1 = 0;
+  score.player2 = 0;
+  cidPlayer1 = null;
+  cidPlayer2 = null;
+  userData.player1 = null;
+  userData.player2 = null;
+}
