@@ -7,7 +7,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:8080",
+    origin: "https://ohmline.herokuapp.com/",
     methods: ["GET", "POST"],
   },
 });
@@ -101,16 +101,16 @@ io.on("connection", (socket) => {
     logger(cid, "websocket disconnect");
     if (cidPlayer1 === cid) {
       connection.player1 = false;
-      score.player1 = 0;
-      cidPlayer1 = null;
-      userData.player1 = null;
+      // score.player1 = 0;
+      // cidPlayer1 = null;
+      // userData.player1 = null;
       console.log(connection.player1);
     }
     if (cidPlayer2 === cid) {
       connection.player2 = false;
-      score.player2 = 0;
-      cidPlayer2 = null;
-      userData.player2 = null;
+      // score.player2 = 0;
+      // cidPlayer2 = null;
+      // userData.player2 = null;
       console.log(connection.player2);
     }
     delete socket_by_cid[cid];
@@ -186,10 +186,10 @@ httpServer.listen(process.env.PORT, () => {
 function resetAll() {
   connection.player1 = false;
   connection.player2 = false;
-  score.player1 = 0;
-  score.player2 = 0;
-  cidPlayer1 = null;
-  cidPlayer2 = null;
-  userData.player1 = null;
-  userData.player2 = null;
+  // score.player1 = 0;
+  // score.player2 = 0;
+  // cidPlayer1 = null;
+  // cidPlayer2 = null;
+  // userData.player1 = null;
+  // userData.player2 = null;
 }
